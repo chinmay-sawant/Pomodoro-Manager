@@ -1,0 +1,12 @@
+/* Custom styling for the alert */
+.custom-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+  }
+  
+.transparent-close {
+background-color: transparent;
+border: none;
+}
