@@ -12,7 +12,7 @@ function App() {
     <>
       <Navbar></Navbar>
       <Routes>
-        <Route path='/' element={<Root/>}/>
+        <Route path='/Pomodoro-Manager' element={<Root/>}/>
         <Route path='/pom' element={<Pomodoro/>}/>
       </Routes>
     </>
