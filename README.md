@@ -18,7 +18,7 @@ This project is fully hosted on GitHub, making it open-source and accessible for
 To get started with Pomodoro Manager, follow these steps:
 
 1. **Clone the Repository**: Clone the Pomodoro Manager repository to your local machine using the following command:
-- **git clone [https://github.com/your-username/pomodoro-manager.git](https://github.com/chinmay-sawant/Pomodoro-Manager)**
+- **git clone https://github.com/chinmay-sawant/Pomodoro-Manager**
 2. **Install Dependencies**: Navigate to the project directory and install the necessary dependencies using npm or yarn:
 -  cd pomodoro-manager
 -  npm install
