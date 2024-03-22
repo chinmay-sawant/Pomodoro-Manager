@@ -72,6 +72,7 @@ export const Pomodoro = (props) => {
   return (
     <>
     <div className="container-sm">
+      <br/>
     <div className="card text-bg-dark border-dark ">
     <h5 className="card-header d-flex justify-content-between align-items-center">
   {props.title}
@@ -80,10 +81,11 @@ export const Pomodoro = (props) => {
   </div>
   
 </h5>
-  <div className="card-body">
-    <h5 className="card-title">{formatTime(minutes)}:{formatTime(seconds)}</h5>
-    <p className="card-text">{props.desc}</p>
-       
+  <div className="card-body"  >
+    <h1 className="card-title" style={{ fontSize: '100px',  textAlign: 'center'}}>{formatTime(minutes)}:{formatTime(seconds)}</h1>
+    <p className="card-text" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>{props.desc}</p>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+
     {!isRunning ? (
           <button onClick={startTimer} type="button" className="btn btn-success">Start</button>
         ) : (
@@ -95,12 +97,15 @@ export const Pomodoro = (props) => {
         <button onClick={increaseMin} type="button" className="btn btn-dark">+</button>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <button onClick={decreaseMin} type="button" className="btn btn-danger">-</button>
+
+    </div>
    
   </div>
 </div>
-  
+<br/>
+    <hr style={{ width: '50%', margin: '0 auto' }} />
     </div>
-    <hr/>
+  
     </>
   )
   
