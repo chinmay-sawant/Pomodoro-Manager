@@ -1,0 +1,66 @@
+
+import { Bar } from 'react-chartjs-2';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+export const PomoChart = ({ pomodoros }) => {
+    // State to hold the pomodoros data
+  const [pomodorosData, setPomodorosData] = useState([]);
+
+  // Effect to update the pomodorosData state when props change
+  useEffect(() => {
+    setPomodorosData(pomodoros);
+  }, [pomodoros]);
+
+  // Formatting data for the chart
+  const chartData = {
+    labels: pomodorosData.map(pomodoro => pomodoro.title),
+    datasets: [
+      {
+        label: 'Minutes',
+        backgroundColor: 'rgba(75,192,192,1)',
+        borderColor: 'rgba(0,0,0,1)',
+        borderWidth: 2,
+        data: pomodorosData.map(pomodoro => localStorage.getItem(`pomodoroMinutes_${pomodoro.id}`))
+      }
+    ]
+  };
+
+  // Options for the chart
+  const options = {
+    title: {
+      display: true,
+      text: 'Pomodoro Task Minutes'
+    },
+    scales: {
+      xAxes: [{
+        type: 'category',
+        scaleLabel: {
+          display: true,
+          labelString: 'Pomodoro Task'
+        }
+      }],
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true
+          }
+        }
+      ]
+    }
+  };
+
+  return (
+    <div>
+      <Bar data={chartData} options={options} />
+    </div>
+  );
+}
+PomoChart.propTypes = {
+    pomodoros: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      desc: PropTypes.string,
+      bodyCollapse: PropTypes.bool,
+      // Add more PropTypes as needed for your data structure
+    })).isRequired
+  };

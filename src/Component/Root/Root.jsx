@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pomodoro } from "../Pomodoro/Pomodoro"
 import './Root.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { CSVLink } from "react-csv";
+import BarChart from "../Chart/BarChart";
 
 export const Root = () => {
   const [pomodoros, setPomodoros] = useState([]);
@@ -13,13 +14,41 @@ export const Root = () => {
   const [taskName,setTaskName] = useState("");
   const [taskDesc,setTaskDesc] = useState("");
   const [alertType,setAlertType] = useState("primary");
+  const data = useRef([]);
   // Useeffect Here
   useEffect(() => {
     const storedPomodoros = localStorage.getItem('pomodoros');
     if (storedPomodoros && !pomodoros.length) {
       setPomodoros(JSON.parse(storedPomodoros));
+      // Define data for CSV export
+    data.current = JSON.parse(storedPomodoros).map(pomodoro => ({
+      id: pomodoro.id,
+      title: pomodoro.title,
+      desc: pomodoro.desc,
+      bodyCollapse: pomodoro.bodyCollapse,
+      minutes: localStorage.getItem(`pomodoroMinutes_${pomodoro.id}`),
+      seconds: localStorage.getItem(`pomodoroSeconds_${pomodoro.id}`),
+      sets : localStorage.getItem(`pomodoroSets_${pomodoro.id}`),
+      totalTimeSpend : (25*parseInt(localStorage.getItem(`pomodoroSets_${pomodoro.id}`))) - parseInt(localStorage.getItem(`pomodoroMinutes_${pomodoro.id}`))
+    
+}));
     }
-  }, [pomodoros]); // Add pomodoros to dependency array
+    else{
+      // Define data for CSV export
+      data.current = pomodoros.map(pomodoro => ({
+        id: pomodoro.id,
+        title: pomodoro.title,
+        desc: pomodoro.desc,
+        bodyCollapse: pomodoro.bodyCollapse,
+        minutes: localStorage.getItem(`pomodoroMinutes_${pomodoro.id}`),
+        seconds: localStorage.getItem(`pomodoroSeconds_${pomodoro.id}`),
+        sets : localStorage.getItem(`pomodoroSets_${pomodoro.id}`),
+        totalTimeSpend : (25*parseInt(localStorage.getItem(`pomodoroSets_${pomodoro.id}`))) - parseInt(localStorage.getItem(`pomodoroMinutes_${pomodoro.id}`))
+      }));
+    }
+      
+    // console.log(data.current);
+  }, [pomodoros,data]); // Add pomodoros to dependency array
 
   // handling onClick of Add Pomodoro function 
   const maxId = pomodoros.reduce((max, pomodoro) => (pomodoro.id > max ? pomodoro.id : max), 0);
@@ -27,6 +56,7 @@ export const Root = () => {
   const handleAddPomodoro = () => {
     localStorage.setItem(`pomodoroMinutes_${maxId+1}`,25);
     localStorage.setItem(`pomodoroSeconds_${maxId+1}`,0);
+    localStorage.removeItem(`pomodoroSets_${maxId+1}`);
     const newPomodoros = [
       ...pomodoros,
       {
@@ -46,7 +76,7 @@ export const Root = () => {
     // Hide the alert after 5 seconds
     setTimeout(() => {
       setShowAlert(false);
-    }, 5000);
+    }, 3000);
   localStorage.setItem('pomodoros', JSON.stringify(newPomodoros));
   }; // handleAddPomodoro Ends Here
 
@@ -93,18 +123,11 @@ const handleRemoveAllPomodoro = () => {
   { label: 'Description', key: 'desc' },
   { label: 'Body Collapse', key: 'bodyCollapse' },
   { label: 'Minutes', key: 'minutes' },
-  { label: 'Seconds', key: 'seconds' }
+  { label: 'Seconds', key: 'seconds' },
+  { label: 'Sets', key: 'sets' },
+  { label: 'TotalTimeSpend', key: 'totalTimeSpend' }
 ];
 
-// Define data for CSV export
-const data = pomodoros.map(pomodoro => ({
-  id: pomodoro.id,
-  title: pomodoro.title,
-  desc: pomodoro.desc,
-  bodyCollapse: pomodoro.bodyCollapse,
-  minutes: localStorage.getItem(`pomodoroMinutes_${pomodoro.id}`),
-  seconds: localStorage.getItem(`pomodoroSeconds_${pomodoro.id}`)
-}));
 
 // Add new Pomodoro 
 const addnewPomodoro = () => {
@@ -161,20 +184,36 @@ const handleTaskDescChange = (event) => {
         </div>
       )}
     </div>
-   <div className="container-sm">
-    <button onClick={addnewPomodoro} className="btn btn-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add New Pomodoro</button>
-    &emsp;
+    <div className="container"> &nbsp; </div>
+   <div className="container-sm text-center">
+   
+   {/* <div className="col" style={{ textAlign: 'right' }}> */}
+   <button onClick={addnewPomodoro} className="btn btn-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add New Pomodoro</button>
+   &emsp;
+    {/* </div> */}
+    {/* <div className="col"> */}
     <button onClick={handleRemoveAllPomodoro} className="btn btn-danger">Remove All Pomodoro</button>
     &emsp;
-    <CSVLink className="btn btn-success" data={data} headers={headers} filename={"pomodoros.csv"}>
+    {/* </div> */}
+    {/* <div className="col" style={{ textAlign: 'left' }}> */}
+    <CSVLink className="btn btn-success" data={data.current} headers={headers} filename={"pomodoros.csv"}>
         Export to CSV
       </CSVLink>
-      &emsp;
+ 
+    {/* </div> */}
+    
+   
+    
+  
+  
+  
+
     </div>
    <br/>
    {pomodoros.map((pomodoro, index) => (
         <Pomodoro key={pomodoro.id} accordion={String(pomodoro.id)} title={pomodoro.title} desc={pomodoro.desc} bodyCollapse={pomodoro.bodyCollapse} removeItemByTitle={removeItemByTitle}/>
       ))}
+     <BarChart data={data.current}/> 
   </>
   )
 }

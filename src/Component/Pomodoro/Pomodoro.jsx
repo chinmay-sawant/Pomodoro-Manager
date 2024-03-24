@@ -12,7 +12,20 @@ export const Pomodoro = (props) => {
     return storedSeconds ? parseInt(storedSeconds) : 0;
   });
     const [isRunning, setIsRunning] = useState(false);
+    const [pomodorosSets,setPomodorosSets] = useState("1");
 
+    useEffect(() => {
+      // Retrieve the value from localStorage
+      const storedValue = localStorage.getItem(`pomodoroSets_${props.accordion}`);
+      if (storedValue) {
+        // If the value exists in localStorage, parse it and set pomodorosSets
+        setPomodorosSets(storedValue);
+      } else {
+        // If the value doesn't exist in localStorage, set it to the default value (1)
+        localStorage.setItem(`pomodoroSets_${props.accordion}`, pomodorosSets);
+      }
+    }, [pomodorosSets,props.accordion]); // Ensure this effect runs when props.accordion changes
+  
     useEffect(() => {
         let intervalId;
         if (isRunning) {
@@ -23,6 +36,9 @@ export const Pomodoro = (props) => {
                 clearInterval(intervalId);
                 setMinutes(25);
                 setSeconds(0)
+                localStorage.setItem(`pomodoroSets_${props.accordion}`, (parseInt(pomodorosSets)+1).toString());
+                setPomodorosSets((prev => parseInt(prev)+1).toString())
+                
                 // Timer ends
               } else {
                 
@@ -35,18 +51,20 @@ export const Pomodoro = (props) => {
           }, 1000);
         }
         return () => clearInterval(intervalId);
-      }, [isRunning, minutes, seconds]);
+      }, [isRunning, minutes, seconds,props.accordion,pomodorosSets]);
 
       useEffect(() => {
         localStorage.setItem(`pomodoroMinutes_${props.accordion}`, minutes);
         localStorage.setItem(`pomodoroSeconds_${props.accordion}`, seconds);        
-      }, [minutes, seconds]);
+      }, [minutes, seconds,props.accordion]);
       const startTimer = () => {
         setIsRunning(true);
       };
     
       const stopTimer = () => {
         setIsRunning(false);
+        localStorage.setItem(`pomodoroMinutes_${props.accordion}`, minutes);
+        localStorage.setItem(`pomodoroSeconds_${props.accordion}`, seconds);      
       };
     
       const resetTimer = () => {
@@ -61,8 +79,15 @@ export const Pomodoro = (props) => {
       };
 
       const decreaseMin = () => {
-        setMinutes(min => min - 1);
-        setSeconds(0);
+        if(minutes>0){
+          setMinutes(min => min - 1);
+          setSeconds(0);
+        }
+        else{
+          setMinutes(0);
+          setSeconds(0);
+        }
+        
       };
     
       const formatTime = (time) => {
@@ -73,7 +98,8 @@ export const Pomodoro = (props) => {
     <>
     <div className="container-sm">
       <br/>
-    <div className="card text-bg-dark border-dark ">
+    {/* <div className="card text-bg-dark border-dark "> */}
+    <div className={`card ${isRunning ? 'text-bg-success' : 'text-bg-dark  border-light '}`}>
     <h5 className="card-header d-flex justify-content-between align-items-center">
   {props.title}
   <div data-bs-theme="dark">
@@ -81,9 +107,11 @@ export const Pomodoro = (props) => {
   </div>
   
 </h5>
-  <div className="card-body"  >
+  <div className="card-body">
     <h1 className="card-title" style={{ fontSize: '100px',  textAlign: 'center'}}>{formatTime(minutes)}:{formatTime(seconds)}</h1>
     <p className="card-text" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>{props.desc}</p>
+    <br/>
+    <p className="card-text" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>Current Set: {pomodorosSets}</p>
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 
     {!isRunning ? (
@@ -103,7 +131,8 @@ export const Pomodoro = (props) => {
   </div>
 </div>
 <br/>
-    <hr style={{ width: '50%', margin: '0 auto' }} />
+<hr style={{ width: '50%', margin: '0 auto', borderColor: 'white' }} />
+
     </div>
   
     </>

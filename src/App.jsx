@@ -7,9 +7,11 @@ import { Root } from './Component/Root/Root';
 import { Navbar } from './Component/Navbar/Navbar';
 import { Pomodoro } from './Component/Pomodoro/Pomodoro';
 import { useEffect } from 'react';
+import BarChart from './Component/Chart/BarChart';
 function App() {
   useEffect(() => {
     document.title = "Pomodoro Manager"; // Set your desired title here
+    document.body.style.backgroundColor = 'rgb(33, 37, 41)';
   }, []); // Empty dependency array ensures the effect runs only once after the component mounts
 
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path='/' element={<Root/>}/>
         <Route path='/Pomodoro-Manager' element={<Root/>}/>
         <Route path='/pom' element={<Pomodoro/>}/>
+        <Route path='/bar' element={<BarChart/>}/>
+        
       </Routes>
     </>
   )
