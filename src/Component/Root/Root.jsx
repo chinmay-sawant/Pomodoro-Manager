@@ -15,6 +15,12 @@ export const Root = ({updateJsonObject}) => {
   const [taskName,setTaskName] = useState("");
   const [taskDesc,setTaskDesc] = useState("");
   const [alertType,setAlertType] = useState("primary");
+  const [value, setValue] = useState(0);
+    // Callback function to update the value in parent from child
+    const updateValueFromChild = () => {
+      setValue(prevCount => prevCount +  1);
+    };
+  
   const data = useRef([]);
   // Useeffect Here
   useEffect(() => {
@@ -32,7 +38,7 @@ export const Root = ({updateJsonObject}) => {
       sets : localStorage.getItem(`pomodoroSets_${pomodoro.id}`),
       totalTimeSpend : (25*parseInt(localStorage.getItem(`pomodoroSets_${pomodoro.id}`))) - parseInt(localStorage.getItem(`pomodoroMinutes_${pomodoro.id}`))
 }));
-    console.log("ROTTJSX. - if -  "+data)
+    // console.log("ROTTJSX. - if -  "+data)
     updateJsonObject('root.data.current', data.current);
     }
     else{
@@ -51,7 +57,7 @@ export const Root = ({updateJsonObject}) => {
     }
       
     // console.log(data.current);
-  }, [pomodoros,data]); // Add pomodoros to dependency array
+  }, [pomodoros,data,value]); // Add pomodoros to dependency array
 
   // handling onClick of Add Pomodoro function 
   const maxId = pomodoros.reduce((max, pomodoro) => (pomodoro.id > max ? pomodoro.id : max), 0);
@@ -214,7 +220,7 @@ const handleTaskDescChange = (event) => {
     </div>
    <br/>
    {pomodoros.map((pomodoro, index) => (
-        <Pomodoro key={pomodoro.id} accordion={String(pomodoro.id)} title={pomodoro.title} desc={pomodoro.desc} bodyCollapse={pomodoro.bodyCollapse} removeItemByTitle={removeItemByTitle} updateJsonObject={updateJsonObject}/>
+        <Pomodoro key={pomodoro.id} accordion={String(pomodoro.id)} title={pomodoro.title} desc={pomodoro.desc} bodyCollapse={pomodoro.bodyCollapse} removeItemByTitle={removeItemByTitle} updateJsonObject={updateJsonObject} updateValueFromChild={updateValueFromChild}/>
       ))}
      {/* <BarChart data={data.current}/>  */}
   </>

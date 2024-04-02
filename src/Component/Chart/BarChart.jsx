@@ -15,14 +15,14 @@ const BarChart = (props) => {
   const storedJsonObject = localStorage.getItem('pomodoroData');
   const initialJsonObject = storedJsonObject ? JSON.parse(storedJsonObject) : { key1: 'value1', key2: 'value2' };
 
-  console.log("BAR PROPS LOCAL STORAGE - ", initialJsonObject);
+  // console.log("BAR PROPS LOCAL STORAGE - ", initialJsonObject);
   // Alternatively, you can use Object.keys() to get an array of keys
   const keys = Object.keys(initialJsonObject);
   keys.forEach(key => {
-    console.log(initialJsonObject[key]);
+    // console.log(initialJsonObject[key]);
     const extractedLabels = initialJsonObject[key].map(item => item.title);
     const extractedMins = initialJsonObject[key].map(item => item.totalTimeSpend);
-    console.log(extractedLabels, extractedMins);
+    // console.log(extractedLabels, extractedMins);
     setLabels(extractedLabels);
     setDataMin(extractedMins);
   });

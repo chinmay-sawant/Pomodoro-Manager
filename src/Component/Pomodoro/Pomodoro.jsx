@@ -29,6 +29,7 @@ export const Pomodoro = (props) => {
     useEffect(() => {
         let intervalId;
         if (isRunning) {
+          props.updateValueFromChild();
           intervalId = setInterval(() => {
             if (seconds === 0) {
               if (minutes === 0) {
@@ -74,11 +75,13 @@ export const Pomodoro = (props) => {
       };
 
       const increaseMin = () => {
+        props.updateValueFromChild();
         setMinutes(min => min + 1);
         setSeconds(0);
       };
 
       const decreaseMin = () => {
+        props.updateValueFromChild();
         if(minutes>0){
           setMinutes(min => min - 1);
           setSeconds(0);
