@@ -64,7 +64,7 @@ export const Pomodoro = (props) => {
       const stopTimer = () => {
         setIsRunning(false);
         localStorage.setItem(`pomodoroMinutes_${props.accordion}`, minutes);
-        localStorage.setItem(`pomodoroSeconds_${props.accordion}`, seconds);      
+        localStorage.setItem(`pomodoroSeconds_${props.accordion}`, seconds); 
       };
     
       const resetTimer = () => {

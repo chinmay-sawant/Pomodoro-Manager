@@ -11,22 +11,22 @@ const BarChart = (props) => {
     const [labels, setLabels] = useState([]);
     const [datamin, setDataMin] = useState([]);
 
-    useEffect(() => {
-      console.log("BAR PRPOS - ",props.data)
-      // Extract titles from data and set them as labels
-      if (props.data && props.data.length > 0) {
-        const extractedLabels = props.data.map(item => item.title);
-        const extractedMins = props.data.map(item => item.totalTimeSpend);
-        // sets - totalTimeSpend
-        setLabels(extractedLabels);
-        setDataMin(extractedMins);
-      }
-      else{
-        setLabels([]);
-        setDataMin([]);
-      }
-    }, [props.data]);
-  
+   useEffect(() => {
+  const storedJsonObject = localStorage.getItem('pomodoroData');
+  const initialJsonObject = storedJsonObject ? JSON.parse(storedJsonObject) : { key1: 'value1', key2: 'value2' };
+
+  console.log("BAR PROPS LOCAL STORAGE - ", initialJsonObject);
+  // Alternatively, you can use Object.keys() to get an array of keys
+  const keys = Object.keys(initialJsonObject);
+  keys.forEach(key => {
+    console.log(initialJsonObject[key]);
+    const extractedLabels = initialJsonObject[key].map(item => item.title);
+    const extractedMins = initialJsonObject[key].map(item => item.totalTimeSpend);
+    console.log(extractedLabels, extractedMins);
+    setLabels(extractedLabels);
+    setDataMin(extractedMins);
+  });
+}, []); // Empty dependency array since this effect doesn't depend on any props or state
   const [barChart,setBarChart] = useState(true);
   const [doughnutChart,setDoughnutChart] = useState(false);
 

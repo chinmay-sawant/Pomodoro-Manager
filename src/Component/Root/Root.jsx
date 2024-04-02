@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from "react";
 import { Pomodoro } from "../Pomodoro/Pomodoro"
@@ -7,7 +8,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { CSVLink } from "react-csv";
 import BarChart from "../Chart/BarChart";
 
-export const Root = () => {
+export const Root = ({updateJsonObject}) => {
   const [pomodoros, setPomodoros] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
   const [alertText,setAlertText] = useState("");
@@ -30,8 +31,9 @@ export const Root = () => {
       seconds: localStorage.getItem(`pomodoroSeconds_${pomodoro.id}`),
       sets : localStorage.getItem(`pomodoroSets_${pomodoro.id}`),
       totalTimeSpend : (25*parseInt(localStorage.getItem(`pomodoroSets_${pomodoro.id}`))) - parseInt(localStorage.getItem(`pomodoroMinutes_${pomodoro.id}`))
-    
 }));
+    console.log("ROTTJSX. - if -  "+data)
+    updateJsonObject('root.data.current', data.current);
     }
     else{
       // Define data for CSV export
@@ -45,6 +47,7 @@ export const Root = () => {
         sets : localStorage.getItem(`pomodoroSets_${pomodoro.id}`),
         totalTimeSpend : (25*parseInt(localStorage.getItem(`pomodoroSets_${pomodoro.id}`))) - parseInt(localStorage.getItem(`pomodoroMinutes_${pomodoro.id}`))
       }));
+      updateJsonObject('root.data.current', data.current);
     }
       
     // console.log(data.current);
@@ -211,9 +214,9 @@ const handleTaskDescChange = (event) => {
     </div>
    <br/>
    {pomodoros.map((pomodoro, index) => (
-        <Pomodoro key={pomodoro.id} accordion={String(pomodoro.id)} title={pomodoro.title} desc={pomodoro.desc} bodyCollapse={pomodoro.bodyCollapse} removeItemByTitle={removeItemByTitle}/>
+        <Pomodoro key={pomodoro.id} accordion={String(pomodoro.id)} title={pomodoro.title} desc={pomodoro.desc} bodyCollapse={pomodoro.bodyCollapse} removeItemByTitle={removeItemByTitle} updateJsonObject={updateJsonObject}/>
       ))}
-     <BarChart data={data.current}/> 
+     {/* <BarChart data={data.current}/>  */}
   </>
   )
 }
